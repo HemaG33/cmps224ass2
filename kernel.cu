@@ -53,8 +53,8 @@ void mm_gpu(float* A, float* B, float* C, unsigned int M, unsigned int N, unsign
     // Copy data to GPU
     startTime(&timer);
 	
-	cudaMemcpy(A_d, A, M*K*sizeof(double), cudaMemcpyHostToDevice);
-	cudaMemcpy(B_d, B, K*N*sizeof(double), cudaMemcpyHostToDevice);
+	cudaMemcpy(A_d, A, M*K*sizeof(float), cudaMemcpyHostToDevice);
+	cudaMemcpy(B_d, B, K*N*sizeof(float), cudaMemcpyHostToDevice);
 
 
 
@@ -69,7 +69,7 @@ void mm_gpu(float* A, float* B, float* C, unsigned int M, unsigned int N, unsign
     // Call kernel
     startTime(&timer);
 
-	dim3 numThreadsPerBlock(512, 512);
+	dim3 numThreadsPerBlock(128, 128);
 	dim3 numBlocks((N + numThreadsPerBlock.x - 1)/numThreadsPerBlock.x,
 	(M + numThreadsPerBlock.y - 1)/numThreadsPerBlock.y);
 	mm_kernel <<< numBlocks, numThreadsPerBlock >>> (A_d, B_d, C_d, M, N, K);
